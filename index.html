@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Let Him Cook - Based on Hangman</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Roboto&display=swap" rel="stylesheet">
+
+    <style>
+        #word {
+            font-family: 'Indie Flower', cursive;
+            font-size: 50pt;
+            text-align: center;
+        }
+
+        #lives {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 18pt;
+        }
+
+        #baconbro {
+            height: 300px;
+            background-image: url('baconpics/idle.png');
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        .letters * {
+            margin: 5px;
+        }
+
+        .btn {
+            background-color: #FF66C4 !important;
+            border-color: #FF66C4 !important;
+        }
+    </style>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+    <script>
+        const dishes = ["TONKATSU", "NILAGANGBABOY", "CRISPYBACON", "HAMBURGER", "SINIGANGNABABOY", "LECHON", "LENGUA", "ADOBONGBABOY", "FRESHHAM", "CRISPYPATA", "PORKCHOP", "PORKBATCHOY", "PORKBELLY", "HAMONADO", "PORK SISIG", "CHICHARON", "PUTOKBATOK", "PORKBARBECUE", "BISTEKTAGALOG", "LONGGANISA", "HOTDOG", "SAUSAGE", "GINILING", "PORKMENUDO", "SIOPAO", "SIOMAI", "EMBUTIDO", "PORKSTEW", "SWEETNSOUR PORK", "LUMPIA", "PANCITPALABOK", "BINAGOONGAN", "KAREKARE", "LAING", "BOPIS", "BICOLEXPRESS", "LUNCHEONMEAT", "CHORIZO", "DINAKDAKAN", "DINUGUAN", "LIEMPO", "LECHONKAWALI", "LECHONPAKSIW", "PAKSIWNABABOY", "PORKASADO", "PULLEDPORK", "STUFFEDHAM", "TOKWATBABOY", "TOCINO"];
+        var word;
+        var letters;
+        var display;
+        var blank;
+        var lives = 5;
+        var buttons = document.getElementsByClassName("btn");
+
+        function pregame() {
+            document.getElementById('word').innerHTML = "What is he cooking?";
+            document.getElementById('lives').innerHTML = "with Chris P. Bacon";
+            document.getElementById('restart').innerHTML = "START";
+            var buttons = document.getElementsByClassName("btn");
+            for (var i = 0; i < buttons.length - 1; i++) {
+                buttons[i].disabled = true;
+            }
+        }
+
+        window.onload = function onload() {
+            pregame();
+        }
+
+        function getWord() {
+            var i = Math.floor(Math.random() * 48);
+            word = dishes[i];
+            letters = word.split('');
+            display = Array(letters.length);
+            document.getElementById('word').innerHTML = " ";
+            for (var j = 0; j < letters.length; j++) {
+                display[j] = " _ ";
+            }
+            blank = display.join(' ');
+            document.getElementById('word').innerHTML = blank;
+            console.log('word chosen:');
+            console.log(word);
+        }
+
+        function start() {
+            lives = 5;
+            document.getElementById('lives').innerHTML = "Lives Left: " + lives;
+            document.getElementById('restart').innerHTML = "RESTART";
+            document.getElementById('baconbro').style.backgroundImage = "url('baconpics/idle.png')";
+            var buttons = document.getElementsByClassName("btn");
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = false;
+            }
+            console.log('game start');
+            getWord();
+        }
+
+        function check(guess) {
+            var guess;
+            var full;
+            var check = 0;
+            console.log(guess);
+            document.getElementById(guess).disabled = true;
+            if (lives > 0) {
+                for (var i = 0; i < letters.length; i++) {
+                    if (guess === letters[i]) {
+                        var check = 1;
+                        display[i] = guess;
+                        blank = display.join(" ");
+                        full = display.join();
+                        document.getElementById('word').innerHTML = blank;
+                        console.log('correct guess');
+                    }
+                }
+                if (full == letters) {
+                    console.log('game won');
+                    window.alert('You won!');
+                    pregame();
+                }
+
+                if (check === 0) {
+                    lives--;
+                    document.getElementById('lives').innerHTML = "Lives Left: " + lives;
+                    switch (lives) {
+                        case 4:
+                            document.getElementById('baconbro').style.backgroundImage = "url('baconpics/one.jpg')";
+                            break;
+                        
+                        case 3:
+                            document.getElementById('baconbro').style.backgroundImage = "url('baconpics/two.jpg')";
+                            break;
+
+                        case 2:
+                            document.getElementById('baconbro').style.backgroundImage = "url('baconpics/three.jpg')";
+                            break;
+
+                        case 1:
+                            document.getElementById('baconbro').style.backgroundImage = "url('baconpics/four.jpg')";
+                            break;
+
+                        case 0:
+                            document.getElementById('baconbro').style.backgroundImage = "url('baconpics/dead.gif')";
+                            break;
+                    }
+                }
+            }
+            if (lives === 0) {
+                window.alert('Who let you cook? The word was ' + word);
+                pregame();
+                console.log('game lost');
+            }
+        }
+    </script>
+</head>
+<body>
+    <header class="container-fluid">
+        <h2 class="title">Let Him Cook!!!</h2>
+        <p>with Chris P. Bacon</p>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="index.html">Let Him Cook</a></li>
+            <li><a href="about.html">Meet The Chefs</a></li>
+        </ul>
+    </nav>
+    <main class="container">
+        <div class="row">
+            <div class="col">
+                <h1 id="word">What is he cooking?</h1>
+                <p id="lives">with Chris P. Bacon</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" id="baconbro"></div>
+        </div>
+        <br><br>
+        <div id="keyboard">
+            <div class="row letters">
+                <button class="col-1 btn btn-primary" onclick="check('A')" id="A">A</button>
+                <button class="col-1 btn btn-primary" onclick="check('B')" id="B">B</button>
+                <button class="col-1 btn btn-primary" onclick="check('C')" id="C">C</button>
+                <button class="col-1 btn btn-primary" onclick="check('D')" id="D">D</button>
+                <button class="col-1 btn btn-primary" onclick="check('E')" id="E">E</button>
+                <button class="col-1 btn btn-primary" onclick="check('F')" id="F">F</button>
+                <button class="col-1 btn btn-primary" onclick="check('G')" id="G">G</button>
+                <button class="col-1 btn btn-primary" onclick="check('H')" id="H">H</button>
+                <button class="col-1 btn btn-primary" onclick="check('I')" id="I">I</button>
+                <button class="col-1 btn btn-primary" onclick="check('J')" id="J">J</button>
+                <button class="col-1 btn btn-primary" onclick="check('K')" id="K">K</button>
+            </div>
+            <div class="row letters">
+                <button class="col-1 btn btn-primary" onclick="check('L')" id="L">L</button>
+                <button class="col-1 btn btn-primary" onclick="check('M')" id="M">M</button>
+                <button class="col-1 btn btn-primary" onclick="check('N')" id="N">N</button>
+                <button class="col-1 btn btn-primary" onclick="check('O')" id="O">O</button>
+                <button class="col-1 btn btn-primary" onclick="check('P')" id="P">P</button>
+                <button class="col-1 btn btn-primary" onclick="check('Q')" id="Q">Q</button>
+                <button class="col-1 btn btn-primary" onclick="check('R')" id="R">R</button>
+                <button class="col-1 btn btn-primary" onclick="check('S')" id="S">S</button>
+                <button class="col-1 btn btn-primary" onclick="check('T')" id="T">T</button>
+                <button class="col-1 btn btn-primary" onclick="check('U')" id="U">U</button>
+                <button class="col-1 btn btn-primary" onclick="check('V')" id="V">V</button>
+            </div>
+            <div class="row letters">
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <button class="col-1 btn btn-primary" onclick="check('W')" id="W">W</button>
+                <button class="col-1 btn btn-primary" onclick="check('X')" id="X">X</button>
+                <button class="col-1 btn btn-primary" onclick="check('Y')" id="Y">Y</button>
+                <button class="col-1 btn btn-primary" onclick="check('Z')" id="Z">Z</button>
+                <button class="col-1 btn btn-primary" onclick="start()" id="restart">START</button>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+                <div class="col-1"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>
+            <span class="title">Let Him Cook!!!</span><br>
+            with Chris P. Bacon<br>
+            based on the classic Hangman game<br><br><br>
+            by Nunez, Pineda, and Soriano<br>
+            Samat Group 10<br>
+        </p>
+    </footer>
+</body>
+</html>
